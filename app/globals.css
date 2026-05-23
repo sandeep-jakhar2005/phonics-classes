@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary: #123b91;
+  --color-secondary: #16b5f5;
+  --color-accent-red: #f43f5e;
+  --color-accent-green: #19c339;
+  --color-accent-yellow: #ffd633;
+  --color-cream: #fffbf0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-cream);
+  color: var(--color-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.border-3 {
+  border-width: 3px;
+}
+
+.border-4 {
+  border-width: 4px;
+}
+
+.comic-shadow {
+  box-shadow: 6px 6px 0px #123b91;
+}
+
+.comic-shadow-sm {
+  box-shadow: 4px 4px 0px #123b91;
+}
+
+.comic-shadow-lg {
+  box-shadow: 8px 8px 0px #123b91;
+}
+
+.cloud-bottom {
+  position: relative;
+}
+
+.cloud-bottom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 80px;
+  background: #fffbf0;
+  border-radius: 100% 100% 0 0;
+}
+
+@keyframes float {
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+  0%,100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+@keyframes bounceSlow {
+  0%,100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 3s infinite;
+}
+
+.cartoon-btn {
+  border: 3px solid #123b91;
+  border-radius: 22px;
+  font-weight: 900;
+  transition: 0.2s ease;
+}
+
+.cartoon-btn:hover {
+  transform: translate(-3px,-3px);
+}
+
+.bg-clouds {
+  background-image:
+    radial-gradient(circle at 100% 150%, #ffffff 24%, #fffbf0 25%, #fffbf0 28%, transparent 29%),
+    radial-gradient(circle at 0% 150%, #ffffff 24%, #fffbf0 25%, #fffbf0 28%, transparent 29%);
+  background-size: 120px 120px;
+}
+
+
+html{
+  scroll-behavior:smooth;
+}
+
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.35s ease;
 }
