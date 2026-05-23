@@ -96,7 +96,18 @@ const KEYFRAMES = `
 `
 
 /* ─── Floating background decoration component ─── */
-function FloatingBg({ items }) {
+    type FloatingItem = {
+      el: React.ReactNode
+      left: string
+      top: string
+      size: string
+      anim: string
+      dur: number
+      delay?: number
+      opacity?: number
+    }
+
+function FloatingBg({ items }: { items: FloatingItem[] }) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden select-none" aria-hidden>
       {items.map((it, i) => (
@@ -116,26 +127,67 @@ function FloatingBg({ items }) {
 }
 
 /* ─── Animated counter ─── */
-function Counter({ target, suffix = '' }) {
+
+function Counter({
+  target,
+  suffix = '',
+}: {
+  target: number
+  suffix?: string
+}) {
+
   const [count, setCount] = useState(0)
-  const ref = useRef()
+
+  const ref = useRef<HTMLSpanElement | null>(null)
+
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
+
+    const observer = new IntersectionObserver((entries) => {
+
+      const entry = entries[0]
+
       if (entry.isIntersecting) {
+
         let start = 0
+
         const step = Math.ceil(target / 60)
+
         const timer = setInterval(() => {
+
           start += step
-          if (start >= target) { setCount(target); clearInterval(timer) }
-          else setCount(start)
+
+          if (start >= target) {
+
+            setCount(target)
+
+            clearInterval(timer)
+
+          } else {
+
+            setCount(start)
+
+          }
+
         }, 25)
+
         observer.disconnect()
+
       }
+
     }, { threshold: 0.5 })
+
     if (ref.current) observer.observe(ref.current)
+
     return () => observer.disconnect()
+
   }, [target])
-  return <span ref={ref}>{count}{suffix}</span>
+
+  return (
+    <span ref={ref}>
+      {count}
+      {suffix}
+    </span>
+  )
 }
 
 export default function HomePage() {
