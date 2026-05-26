@@ -187,7 +187,7 @@ export default function Footer() {
                 <span>📞</span>
 
                 <span>
-                  +91 98826 20805
+                  +91 7876535799
                 </span>
               </a>
 

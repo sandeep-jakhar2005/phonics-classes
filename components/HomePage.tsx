@@ -332,7 +332,7 @@ export default function HomePage() {
                 
                 {/* WhatsApp Connection */}
                 <a 
-                  href="https://wa.me/917876535799?text=Hi,%20I%20am%20interested%20in%20Phonics%20Classes!" 
+                  href="https://wa.me/919882620805?text=Hi,%20I%20am%20interested%20in%20Phonics%20Classes!" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto bg-[#19C339] text-white rounded-[20px] border-[4px] border-[#123B91] px-6 py-3 font-black text-[16px] flex items-center justify-center gap-3 shadow-[5px_5px_0_#123B91] hover:translate-x-[-3px] hover:translate-y-[-3px] hover:shadow-[8px_8px_0_#123B91] transition-all duration-200 cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#123B91] no-underline"
@@ -1441,7 +1441,7 @@ export default function HomePage() {
 
             {/* WHATSAPP */}
             <a
-              href="https://wa.me/917876535799"
+              href="https://wa.me/919882620805?text=Hi,%20I%20am%20interested%20in%20Phonics%20Classes!"
               target="_blank"
               rel="noopener noreferrer"
               className="
