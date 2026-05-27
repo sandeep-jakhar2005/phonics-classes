@@ -2192,7 +2192,7 @@ export default function HomePage() {
 
           {/* FORM */}
           <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSf8dsHfW1YZ3plYIVatLPz4yzZdAz3nCsG1SJc2hmOV6dkxgA/viewform?embedded=true"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSciwh59uRGjcw7l1TLxGR4MU6bj3qHRL_5sy34C40FByPweaA/viewform"
             width="100%"
             height="100%"
             className="border-0"
@@ -2372,7 +2372,7 @@ export default function HomePage() {
 
           {/* GOOGLE FORM */}
           <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSf8dsHfW1YZ3plYIVatLPz4yzZdAz3nCsG1SJc2hmOV6dkxgA/viewform?embedded=true"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSciwh59uRGjcw7l1TLxGR4MU6bj3qHRL_5sy34C40FByPweaA/viewform"
             width="100%"
             height="100%"
             className="
