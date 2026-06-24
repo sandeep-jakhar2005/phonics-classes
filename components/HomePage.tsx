@@ -1,368 +1,524 @@
-'use client'
+  'use client'
 
-import { useEffect, useRef, useState } from 'react'
+  import { useEffect, useRef, useState } from 'react'
 
-/* ─── Keyframe injection ─── */
-const KEYFRAMES = `
-@keyframes floatY {
-  0%,100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-18px) rotate(6deg); }
-}
-@keyframes floatYR {
-  0%,100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-14px) rotate(-8deg); }
-}
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes spinR {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
-}
-@keyframes pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50%      { opacity:.5; transform:scale(1.3); }
-}
-@keyframes wiggle {
-  0%,100% { transform: rotate(-8deg); }
-  50%      { transform: rotate(8deg); }
-}
-@keyframes slideInLeft {
-  from { opacity:0; transform:translateX(-60px); }
-  to   { opacity:1; transform:translateX(0); }
-}
-@keyframes slideInRight {
-  from { opacity:0; transform:translateX(60px); }
-  to   { opacity:1; transform:translateX(0); }
-}
-@keyframes slideInUp {
-  from { opacity:0; transform:translateY(40px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity:0; }
-  to   { opacity:1; }
-}
-@keyframes bounceIn {
-  0%   { opacity:0; transform:scale(.3); }
-  50%  { opacity:1; transform:scale(1.08); }
-  70%  { transform:scale(.95); }
-  100% { transform:scale(1); }
-}
-@keyframes orbit {
-  from { transform: rotate(0deg) translateX(30px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(30px) rotate(-360deg); }
-}
-@keyframes drift {
-  0%  { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(12px) translateY(-8px); }
-  50% { transform: translateX(0) translateY(-16px); }
-  75% { transform: translateX(-12px) translateY(-8px); }
-  100%{ transform: translateX(0) translateY(0); }
-}
-@keyframes rainbowBorder {
-  0%   { border-color: #FF4F7A; }
-  25%  { border-color: #FFD633; }
-  50%  { border-color: #19C339; }
-  75%  { border-color: #24B5F3; }
-  100% { border-color: #FF4F7A; }
-}
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-@keyframes cardPop {
-  from { opacity:0; transform: translateY(30px) scale(.9); }
-  to   { opacity:1; transform: translateY(0) scale(1); }
-}
-@keyframes starTwinkle {
-  0%,100% { opacity:1;  transform: scale(1) rotate(0deg); }
-  50%      { opacity:.2; transform: scale(.6) rotate(45deg); }
-}
-@keyframes bubblePop {
-  0%   { transform: scale(0) rotate(-10deg); opacity:0; }
-  60%  { transform: scale(1.1) rotate(3deg); opacity:1; }
-  100% { transform: scale(1) rotate(0deg); opacity:1; }
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+  /* ─── Keyframe injection ─── */
+  const KEYFRAMES = `
+  @keyframes floatY {
+    0%,100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(6deg); }
+  }
+  @keyframes floatYR {
+    0%,100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(-8deg); }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes spinR {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:.5; transform:scale(1.3); }
+  }
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-8deg); }
+    50%      { transform: rotate(8deg); }
+  }
+  @keyframes slideInLeft {
+    from { opacity:0; transform:translateX(-60px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity:0; transform:translateX(60px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  @keyframes slideInUp {
+    from { opacity:0; transform:translateY(40px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity:0; }
+    to   { opacity:1; }
+  }
+  @keyframes bounceIn {
+    0%   { opacity:0; transform:scale(.3); }
+    50%  { opacity:1; transform:scale(1.08); }
+    70%  { transform:scale(.95); }
+    100% { transform:scale(1); }
+  }
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(30px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(30px) rotate(-360deg); }
+  }
+  @keyframes drift {
+    0%  { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(12px) translateY(-8px); }
+    50% { transform: translateX(0) translateY(-16px); }
+    75% { transform: translateX(-12px) translateY(-8px); }
+    100%{ transform: translateX(0) translateY(0); }
+  }
+  @keyframes rainbowBorder {
+    0%   { border-color: #FF4F7A; }
+    25%  { border-color: #FFD633; }
+    50%  { border-color: #19C339; }
+    75%  { border-color: #24B5F3; }
+    100% { border-color: #FF4F7A; }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes cardPop {
+    from { opacity:0; transform: translateY(30px) scale(.9); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  @keyframes starTwinkle {
+    0%,100% { opacity:1;  transform: scale(1) rotate(0deg); }
+    50%      { opacity:.2; transform: scale(.6) rotate(45deg); }
+  }
+  @keyframes bubblePop {
+    0%   { transform: scale(0) rotate(-10deg); opacity:0; }
+    60%  { transform: scale(1.1) rotate(3deg); opacity:1; }
+    100% { transform: scale(1) rotate(0deg); opacity:1; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
 
-/* ─── Hide scrollbar utility for mobile horizontal scroll ─── */
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
-`
+  /* ─── Hide scrollbar utility for mobile horizontal scroll ─── */
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  `
 
-/* ─── Floating background decoration component ─── */
-    type FloatingItem = {
-      el: React.ReactNode
-      left: string
-      top: string
-      size: string
-      anim: string
-      dur: number
-      delay?: number
-      opacity?: number
-    }
-
-function FloatingBg({ items }: { items: FloatingItem[] }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden select-none" aria-hidden>
-      {items.map((it, i) => (
-        <span key={i} style={{
-          position: 'absolute',
-          left: it.left,
-          top: it.top,
-          fontSize: it.size,
-          animation: `${it.anim} ${it.dur}s ${it.delay || 0}s ease-in-out infinite`,
-          opacity: it.opacity || 0.35,
-          zIndex: 1,
-          display: 'block',
-        }}>{it.el}</span>
-      ))}
-    </div>
-  )
-}
-
-/* ─── Animated counter ─── */
-
-function Counter({
-  target,
-  suffix = '',
-}: {
-  target: number
-  suffix?: string
-}) {
-
-  const [count, setCount] = useState(0)
-
-  const ref = useRef<HTMLSpanElement | null>(null)
-
-  useEffect(() => {
-
-    const observer = new IntersectionObserver((entries) => {
-
-      const entry = entries[0]
-
-      if (entry.isIntersecting) {
-
-        let start = 0
-
-        const step = Math.ceil(target / 60)
-
-        const timer = setInterval(() => {
-
-          start += step
-
-          if (start >= target) {
-
-            setCount(target)
-
-            clearInterval(timer)
-
-          } else {
-
-            setCount(start)
-
-          }
-
-        }, 25)
-
-        observer.disconnect()
-
+  /* ─── Floating background decoration component ─── */
+      type FloatingItem = {
+        el: React.ReactNode
+        left: string
+        top: string
+        size: string
+        anim: string
+        dur: number
+        delay?: number
+        opacity?: number
       }
 
-    }, { threshold: 0.5 })
+  function FloatingBg({ items }: { items: FloatingItem[] }) {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden select-none" aria-hidden>
+        {items.map((it, i) => (
+          <span key={i} style={{
+            position: 'absolute',
+            left: it.left,
+            top: it.top,
+            fontSize: it.size,
+            animation: `${it.anim} ${it.dur}s ${it.delay || 0}s ease-in-out infinite`,
+            opacity: it.opacity || 0.35,
+            zIndex: 1,
+            display: 'block',
+          }}>{it.el}</span>
+        ))}
+      </div>
+    )
+  }
 
-    if (ref.current) observer.observe(ref.current)
+  /* ─── Animated counter ─── */
 
-    return () => observer.disconnect()
+  function Counter({
+    target,
+    suffix = '',
+  }: {
+    target: number
+    suffix?: string
+  }) {
 
-  }, [target])
+    const [count, setCount] = useState(0)
 
-  return (
-    <span ref={ref}>
-      {count}
-      {suffix}
-    </span>
-  )
-}
+    const ref = useRef<HTMLSpanElement | null>(null)
 
-export default function HomePage() {
-  const [showForm, setShowForm] = useState(false)
-  return (
-    <main className="overflow-hidden bg-[#F8F5ED] pt-[80px] md:pt-[120px]">
-      <style>{KEYFRAMES}</style>
+    useEffect(() => {
 
-      {/* ═══════════════════════════════════════════
-          HERO SECTION
-      ═══════════════════════════════════════════ */}
-<section id="home" className="relative overflow-hidden pt-[70px] sm:pt-[90px] lg:pt-[100px] pb-[120px] sm:pb-[200px] md:pb-[360px]">
+      const observer = new IntersectionObserver((entries) => {
 
-        {/* Background image */}
-        {/* Desktop Background */}
+        const entry = entries[0]
+
+        if (entry.isIntersecting) {
+
+          let start = 0
+
+          const step = Math.ceil(target / 60)
+
+          const timer = setInterval(() => {
+
+            start += step
+
+            if (start >= target) {
+
+              setCount(target)
+
+              clearInterval(timer)
+
+            } else {
+
+              setCount(start)
+
+            }
+
+          }, 25)
+
+          observer.disconnect()
+
+        }
+
+      }, { threshold: 0.5 })
+
+      if (ref.current) observer.observe(ref.current)
+
+      return () => observer.disconnect()
+
+    }, [target])
+
+    return (
+      <span ref={ref}>
+        {count}
+        {suffix}
+      </span>
+    )
+  }
+
+
+  /* ─── Video Card ─── */
+  function VideoCard({ src, idx }: { src: string; idx: number }) {
+    const [open, setOpen] = useState(false)
+
+    useEffect(() => {
+      if (open) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+      return () => {
+        document.body.style.overflow = ''
+      }
+    }, [open])
+
+    useEffect(() => {
+      if (!open) return
+
+      const overlay = document.createElement('div')
+      overlay.id = `video-overlay-${idx}`
+      Object.assign(overlay.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0,0,0,0.92)',
+        zIndex: '2147483647',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        boxSizing: 'border-box',
+      })
+
+      const box = document.createElement('div')
+      Object.assign(box.style, {
+        position: 'relative',
+        width: '100%',
+        maxWidth: '820px',
+        backgroundColor: '#0d1b3e',
+        borderRadius: '24px',
+        overflow: 'hidden',
+        border: '4px solid #FFD633',
+        boxShadow: '0 0 0 6px #123B91',
+      })
+
+      const closeBtn = document.createElement('button')
+      closeBtn.innerHTML = '×'
+      Object.assign(closeBtn.style, {
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: '10',
+        width: '44px',
+        height: '44px',
+        borderRadius: '50%',
+        backgroundColor: '#FF4F7A',
+        color: 'white',
+        fontSize: '28px',
+        fontWeight: '900',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        lineHeight: '1',
+        boxShadow: '0 4px 0 #c0325a',
+      })
+
+      const videoWrap = document.createElement('div')
+      Object.assign(videoWrap.style, {
+        width: '100%',
+        aspectRatio: '16/9',
+        backgroundColor: '#000',
+      })
+
+      const video = document.createElement('video')
+      video.src = src
+      video.controls = true
+      video.autoplay = true
+      video.playsInline = true
+      Object.assign(video.style, {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+      })
+
+      const closeHandler = () => {
+        video.pause()
+        document.body.removeChild(overlay)
+        setOpen(false)
+      }
+
+      closeBtn.addEventListener('click', closeHandler)
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeHandler()
+      })
+
+      const keyHandler = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') closeHandler()
+      }
+      document.addEventListener('keydown', keyHandler)
+
+      videoWrap.appendChild(video)
+      box.appendChild(closeBtn)
+      box.appendChild(videoWrap)
+      overlay.appendChild(box)
+      document.body.appendChild(overlay)
+
+      return () => {
+        document.removeEventListener('keydown', keyHandler)
+        if (document.getElementById(`video-overlay-${idx}`)) {
+          video.pause()
+          document.body.removeChild(overlay)
+        }
+      }
+    }, [open, src, idx])
+
+    return (
+      <div
+        className="relative rounded-[24px] border-[3px] border-[#E5B84B] shadow-[0_8px_0_0_#E5B84B]
+          hover:shadow-[0_4px_0_0_#E5B84B] hover:translate-y-[4px] transition-all duration-300
+          overflow-hidden group cursor-pointer bg-black"
+        style={{ animation: `cardPop .6s ${.1 + idx * .18}s ease both` }}
+        onClick={() => setOpen(true)}
+      >
+        {/* THUMBNAIL — portrait 9/16, object-cover so no black bars */}
+        <div className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: '9/16' }}>
+          <video
+            src={src}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            muted
+            playsInline
+            preload="metadata"
+          />
+          <div className="absolute inset-0 bg-[#123B91]/20 group-hover:bg-[#123B91]/40 transition-all duration-300" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div
+              className="w-[68px] h-[68px] rounded-full bg-[#FFD633] border-[4px] border-[#123B91]
+                flex items-center justify-center shadow-[4px_4px_0_#123B91]
+                group-hover:scale-110 group-hover:bg-white transition-all duration-300"
+              style={{ animation: 'floatY 3s ease-in-out infinite' }}
+            >
+              <svg className="w-8 h-8 fill-[#123B91] ml-1" viewBox="0 0 24 24">
+                <polygon points="5,3 19,12 5,21"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+
+  export default function HomePage() {
+    const [showForm, setShowForm] = useState(false)
+    return (
+      <main className="overflow-hidden bg-[#F8F5ED] pt-[80px] md:pt-[120px]">
+        <style>{KEYFRAMES}</style>
+
+        {/* ═══════════════════════════════════════════
+            HERO SECTION
+        ═══════════════════════════════════════════ */}
+  <section id="home" className="relative overflow-hidden pt-[70px] sm:pt-[90px] lg:pt-[100px] pb-[120px] sm:pb-[200px] md:pb-[360px]">
+
+          {/* Background image */}
+          {/* Desktop Background */}
+            <div
+              className="
+                absolute
+                inset-0
+                hidden
+                lg:block
+                bg-cover
+                bg-center
+                bg-no-repeat
+              "
+              style={{
+                backgroundImage: "url('/images/hero-bg.png')"
+              }}
+            />
+
+          {/* MOBILE BACKGROUND */}
           <div
             className="
               absolute
               inset-0
-              hidden
-              lg:block
+
+              block
+              md:hidden
+
               bg-cover
+              bg-top
+              bg-no-repeat
+            "
+            style={{
+              backgroundImage:
+                "url('/images/mobile-hero-bg.png')"
+            }}
+          />
+
+          {/* iPAD BACKGROUND */}
+          <div
+            className="
+              absolute
+              inset-0
+
+              hidden
+              md:block
+              lg:hidden
+
+              bg-[length:100%_100%]
               bg-center
               bg-no-repeat
             "
             style={{
-              backgroundImage: "url('/images/hero-bg.png')"
+              backgroundImage:
+                "url('/images/ipad-hero-bg.png')"
             }}
           />
 
-        {/* MOBILE BACKGROUND */}
-        <div
-          className="
-            absolute
-            inset-0
 
-            block
-            md:hidden
+          <div className="absolute inset-0 bg-[#24B5F3]/10" />
 
-            bg-cover
-            bg-top
-            bg-no-repeat
-          "
-          style={{
-            backgroundImage:
-              "url('/images/mobile-hero-bg.png')"
-          }}
-        />
+          {/* ── Animated floating bg elements ── */}
+          <FloatingBg items={[
+            { el: '⭐', left: '5%',  top: '12%', size: '2rem',  anim: 'floatY',     dur: 3.2, delay: 0   },
+            { el: '🌟', left: '88%', top: '8%',  size: '2.5rem',anim: 'floatYR',    dur: 4,   delay: 1   },
+            { el: '✏️', left: '15%', top: '70%', size: '2rem',  anim: 'wiggle',     dur: 2.5, delay: .5  },
+            { el: '🎈', left: '78%', top: '60%', size: '2.8rem',anim: 'floatY',     dur: 5,   delay: .8  },
+            { el: '📚', left: '92%', top: '40%', size: '2rem',  anim: 'floatYR',    dur: 3.8, delay: 1.5 },
+            { el: '🌈', left: '3%',  top: '45%', size: '2.2rem',anim: 'drift',      dur: 6,   delay: 2   },
+            { el: '✦',  left: '50%', top: '5%',  size: '1.5rem',anim: 'starTwinkle',dur: 1.5,delay: .3   },
+            { el: '✦',  left: '35%', top: '80%', size: '1.2rem',anim: 'starTwinkle',dur: 2,   delay: .9   },
+            { el: '🎯', left: '60%', top: '75%', size: '1.8rem',anim: 'floatY',     dur: 4.5, delay: 1.2 },
+            { el: '💫', left: '25%', top: '20%', size: '1.6rem',anim: 'pulse',      dur: 2,   delay: .6  },
+          ]} />
 
-        {/* iPAD BACKGROUND */}
-        <div
-          className="
-            absolute
-            inset-0
+          <div className="container relative z-20 mx-auto max-w-[1280px] px-5">
+            <div className="grid lg:grid-cols-2 items-center min-h-[auto] lg:min-h-[550px]">
 
-            hidden
-            md:block
-            lg:hidden
+              {/* LEFT SIDE */}
+              <div className="max-w-[520px] mx-auto lg:mx-0 text-center lg:text-left pt-[50px]">
 
-            bg-[length:100%_100%]
-            bg-center
-            bg-no-repeat
-          "
-          style={{
-            backgroundImage:
-              "url('/images/ipad-hero-bg.png')"
-          }}
-        />
+                {/* BADGE */}
+                <div style={{ animation: 'bubblePop .7s ease both' }}
+                  className="inline-flex items-center gap-2 bg-[#FFD633] rounded-full border-[4px] border-[#123B91] px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0_#123B91] text-[#123B91] font-black text-[12px] sm:text-[14px] mb-5 sm:mb-6">
+                  ✨ Phonics Classes For Kids
+                </div>
 
+                {/* TITLE */}
+                <h1 className="leading-[0.95] font-black tracking-[-2px]">
+                  <span style={{ animation: 'slideInLeft .6s .1s ease both' }}
+                    className="block text-[#123B91] text-[40px] sm:text-[58px] md:text-[64px] lg:text-[74px]">
+                    Strong Phonics.
+                  </span>
+                  <span style={{ animation: 'slideInLeft .6s .25s ease both' }}
+                    className="block text-[#FF4F7A] text-[36px] sm:text-[52px] md:text-[60px] lg:text-[68px]">
+                    Strong Foundation,
+                  </span>
+                  <span style={{ animation: 'slideInLeft .6s .4s ease both' }}
+                    className="block text-[#19C339] text-[36px] sm:text-[52px] md:text-[60px] lg:text-[68px]">
+                    Bright Future!
+                  </span>
+                </h1>
 
-        <div className="absolute inset-0 bg-[#24B5F3]/10" />
+                {/* DESCRIPTION */}
+                <p style={{ animation: 'fadeIn .8s .55s ease both' }}
+                  className="mt-4 sm:mt-5 text-[#222] text-[16px] sm:text-[19px] lg:text-[21px] leading-[1.6] font-bold max-w-[430px] mx-auto lg:mx-0">
+                  Fun, engaging and effective phonics classes that help children{" "}
+                  <span className="text-[#FF4F7A] font-black"> read</span>,{" "}
+                  <span className="text-[#19C339] font-black"> spell</span>{" "}
+                  and{" "}
+                  <span className="text-[#F59E0B] font-black"> succeed!</span>
+                </p>
 
-        {/* ── Animated floating bg elements ── */}
-        <FloatingBg items={[
-          { el: '⭐', left: '5%',  top: '12%', size: '2rem',  anim: 'floatY',     dur: 3.2, delay: 0   },
-          { el: '🌟', left: '88%', top: '8%',  size: '2.5rem',anim: 'floatYR',    dur: 4,   delay: 1   },
-          { el: '✏️', left: '15%', top: '70%', size: '2rem',  anim: 'wiggle',     dur: 2.5, delay: .5  },
-          { el: '🎈', left: '78%', top: '60%', size: '2.8rem',anim: 'floatY',     dur: 5,   delay: .8  },
-          { el: '📚', left: '92%', top: '40%', size: '2rem',  anim: 'floatYR',    dur: 3.8, delay: 1.5 },
-          { el: '🌈', left: '3%',  top: '45%', size: '2.2rem',anim: 'drift',      dur: 6,   delay: 2   },
-          { el: '✦',  left: '50%', top: '5%',  size: '1.5rem',anim: 'starTwinkle',dur: 1.5,delay: .3   },
-          { el: '✦',  left: '35%', top: '80%', size: '1.2rem',anim: 'starTwinkle',dur: 2,   delay: .9   },
-          { el: '🎯', left: '60%', top: '75%', size: '1.8rem',anim: 'floatY',     dur: 4.5, delay: 1.2 },
-          { el: '💫', left: '25%', top: '20%', size: '1.6rem',anim: 'pulse',      dur: 2,   delay: .6  },
-        ]} />
-
-        <div className="container relative z-20 mx-auto max-w-[1280px] px-5">
-          <div className="grid lg:grid-cols-2 items-center min-h-[auto] lg:min-h-[550px]">
-
-            {/* LEFT SIDE */}
-            <div className="max-w-[520px] mx-auto lg:mx-0 text-center lg:text-left pt-[50px]">
-
-              {/* BADGE */}
-              <div style={{ animation: 'bubblePop .7s ease both' }}
-                className="inline-flex items-center gap-2 bg-[#FFD633] rounded-full border-[4px] border-[#123B91] px-4 sm:px-6 py-2 sm:py-3 shadow-[4px_4px_0_#123B91] text-[#123B91] font-black text-[12px] sm:text-[14px] mb-5 sm:mb-6">
-                ✨ Phonics Classes For Kids
-              </div>
-
-              {/* TITLE */}
-              <h1 className="leading-[0.95] font-black tracking-[-2px]">
-                <span style={{ animation: 'slideInLeft .6s .1s ease both' }}
-                  className="block text-[#123B91] text-[40px] sm:text-[58px] md:text-[64px] lg:text-[74px]">
-                  Strong Phonics.
-                </span>
-                <span style={{ animation: 'slideInLeft .6s .25s ease both' }}
-                  className="block text-[#FF4F7A] text-[36px] sm:text-[52px] md:text-[60px] lg:text-[68px]">
-                  Strong Foundation,
-                </span>
-                <span style={{ animation: 'slideInLeft .6s .4s ease both' }}
-                  className="block text-[#19C339] text-[36px] sm:text-[52px] md:text-[60px] lg:text-[68px]">
-                  Bright Future!
-                </span>
-              </h1>
-
-              {/* DESCRIPTION */}
-              <p style={{ animation: 'fadeIn .8s .55s ease both' }}
-                className="mt-4 sm:mt-5 text-[#222] text-[16px] sm:text-[19px] lg:text-[21px] leading-[1.6] font-bold max-w-[430px] mx-auto lg:mx-0">
-                Fun, engaging and effective phonics classes that help children{" "}
-                <span className="text-[#FF4F7A] font-black"> read</span>,{" "}
-                <span className="text-[#19C339] font-black"> spell</span>{" "}
-                and{" "}
-                <span className="text-[#F59E0B] font-black"> succeed!</span>
-              </p>
-
-              {/* FEATURE ICONS */}
-              <div className="grid grid-cols-4 gap-3 sm:gap-4 mt-7 sm:mt-8 max-w-[360px] mx-auto lg:mx-0">
-                {[ ['👩‍🏫','Expert'], ['📌','Proven'], ['🎨','Fun'], ['⭐','Personalized'] ].map((item, idx) => (
-                  <div key={idx} style={{ animation: `bounceIn .5s ${.7 + idx*.1}s ease both` }} className="text-center">
-                    <div className="w-[48px] h-[48px] sm:w-[58px] sm:h-[58px] rounded-full bg-white border-[3px] border-[#123B91] flex items-center justify-center mx-auto shadow-[3px_3px_0_#123B91] text-[18px] sm:text-[22px]
-                      hover:scale-110 transition-transform duration-200 cursor-default"
-                      style={{ animation: `floatY ${3 + idx * .4}s ${idx * .3}s ease-in-out infinite` }}>
-                      {item[0]}
+                {/* FEATURE ICONS */}
+                <div className="grid grid-cols-4 gap-3 sm:gap-4 mt-7 sm:mt-8 max-w-[360px] mx-auto lg:mx-0">
+                  {[ ['👩‍🏫','Expert'], ['📌','Proven'], ['🎨','Fun'], ['⭐','Personalized'] ].map((item, idx) => (
+                    <div key={idx} style={{ animation: `bounceIn .5s ${.7 + idx*.1}s ease both` }} className="text-center">
+                      <div className="w-[48px] h-[48px] sm:w-[58px] sm:h-[58px] rounded-full bg-white border-[3px] border-[#123B91] flex items-center justify-center mx-auto shadow-[3px_3px_0_#123B91] text-[18px] sm:text-[22px]
+                        hover:scale-110 transition-transform duration-200 cursor-default"
+                        style={{ animation: `floatY ${3 + idx * .4}s ${idx * .3}s ease-in-out infinite` }}>
+                        {item[0]}
+                      </div>
+                      <p className="mt-2 text-[#123B91] font-black text-[10px] sm:text-[12px]">{item[1]}</p>
                     </div>
-                    <p className="mt-2 text-[#123B91] font-black text-[10px] sm:text-[12px]">{item[1]}</p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* CONNECTED ACTION BUTTONS */}
-              <div style={{ animation: 'slideInUp .6s 1.1s ease both' }} 
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-7 sm:mt-8 items-center justify-center lg:justify-start w-full">
-                
-                {/* WhatsApp Connection */}
-                <a 
-                  href="https://wa.me/919882620805?text=Hi,%20I%20am%20interested%20in%20Phonics%20Classes!" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto bg-[#19C339] text-white rounded-[20px] border-[4px] border-[#123B91] px-6 py-3 font-black text-[16px] flex items-center justify-center gap-3 shadow-[5px_5px_0_#123B91] hover:translate-x-[-3px] hover:translate-y-[-3px] hover:shadow-[8px_8px_0_#123B91] transition-all duration-200 cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#123B91] no-underline"
-                >
-                  <svg className="w-6 h-6 fill-white shrink-0" viewBox="0 0 24 24">
-                    <path d="M12.004 2c-5.51 0-9.993 4.483-9.993 9.993 0 1.763.457 3.49 1.329 5.005L2 22l5.122-1.343c1.467.8 3.11 1.222 4.781 1.222 5.51 0 9.994-4.483 9.994-9.993C21.997 6.483 17.514 2 12.004 2zm5.221 14.12c-.227.64-.897 1.177-1.609 1.348-.485.114-1.12.212-3.243-.668-2.716-1.127-4.467-3.9-4.603-4.08-.135-.18-1.111-1.48-1.111-2.82 0-1.343.702-2.003.951-2.275.25-.272.544-.34.726-.34h.521c.18 0 .43.023.634.521.227.544.771 1.882.839 2.019.068.136.113.318.022.5-.09.18-.136.317-.272.476-.136.158-.295.34-.408.475-.136.159-.272.34-.114.612.159.272.703 1.157 1.52 1.882.158.137.317.25.52.34.205.09.41.114.568-.045.158-.16.68-.794.862-1.066.18-.272.363-.227.612-.136.25.09 1.588.75 1.86 1.112.272.113.272.272.204.544z"/>
-                  </svg>
-                  <div className="text-left leading-tight">
-                    <span className="block text-[15px] font-black">WhatsApp Us</span>
-                    <span className="block text-[11px] opacity-90 font-medium">Chat on WhatsApp</span>
-                  </div>
-                </a>
+                {/* CONNECTED ACTION BUTTONS */}
+                <div style={{ animation: 'slideInUp .6s 1.1s ease both' }} 
+                  className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-7 sm:mt-8 items-center justify-center lg:justify-start w-full">
+                  
+                  {/* WhatsApp Connection */}
+                  <a 
+                    href="https://wa.me/919882620805?text=Hi,%20I%20am%20interested%20in%20Phonics%20Classes!" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto bg-[#19C339] text-white rounded-[20px] border-[4px] border-[#123B91] px-6 py-3 font-black text-[16px] flex items-center justify-center gap-3 shadow-[5px_5px_0_#123B91] hover:translate-x-[-3px] hover:translate-y-[-3px] hover:shadow-[8px_8px_0_#123B91] transition-all duration-200 cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#123B91] no-underline"
+                  >
+                    <svg className="w-6 h-6 fill-white shrink-0" viewBox="0 0 24 24">
+                      <path d="M12.004 2c-5.51 0-9.993 4.483-9.993 9.993 0 1.763.457 3.49 1.329 5.005L2 22l5.122-1.343c1.467.8 3.11 1.222 4.781 1.222 5.51 0 9.994-4.483 9.994-9.993C21.997 6.483 17.514 2 12.004 2zm5.221 14.12c-.227.64-.897 1.177-1.609 1.348-.485.114-1.12.212-3.243-.668-2.716-1.127-4.467-3.9-4.603-4.08-.135-.18-1.111-1.48-1.111-2.82 0-1.343.702-2.003.951-2.275.25-.272.544-.34.726-.34h.521c.18 0 .43.023.634.521.227.544.771 1.882.839 2.019.068.136.113.318.022.5-.09.18-.136.317-.272.476-.136.158-.295.34-.408.475-.136.159-.272.34-.114.612.159.272.703 1.157 1.52 1.882.158.137.317.25.52.34.205.09.41.114.568-.045.158-.16.68-.794.862-1.066.18-.272.363-.227.612-.136.25.09 1.588.75 1.86 1.112.272.113.272.272.204.544z"/>
+                    </svg>
+                    <div className="text-left leading-tight">
+                      <span className="block text-[15px] font-black">WhatsApp Us</span>
+                      <span className="block text-[11px] opacity-90 font-medium">Chat on WhatsApp</span>
+                    </div>
+                  </a>
 
-                {/* Email Connection */}
-                <a 
-                  href="mailto:reenaminhas4426@gmail.com?subject=Inquiry%20About%20Phonics%20Classes"
-                  className="w-full sm:w-auto bg-white text-[#123B91] rounded-[20px] border-[4px] border-[#123B91] px-6 py-3 font-black text-[16px] flex items-center justify-center gap-3 shadow-[5px_5px_0_#123B91] hover:translate-x-[-3px] hover:translate-y-[-3px] hover:shadow-[8px_8px_0_#123B91] transition-all duration-200 cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#123B91] no-underline"
-                >
-                  <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none">
-                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" fill="#EAEAEA"/>
-                    <path d="M22 6v12c0 1.1-.9 2-2 2h-3V8l-5 4-5-4v12H4c-1.1 0-2-.9-2-2V6l10 7 10-7z" fill="#4285F4"/>
-                    <path d="M2 6v2l10 7 10-7V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2z" fill="#EA4335"/>
-                  </svg>
-                  <div className="text-left leading-tight">
-                    <span className="block text-[15px] font-black text-[#123B91]">Email Us</span>
-                    <span className="block text-[11px] text-gray-500 font-medium">Send us an Email</span>
-                  </div>
-                </a>
-                
-              </div>
+                  {/* Email Connection */}
+                  <a 
+                    href="mailto:reenaminhas4426@gmail.com?subject=Inquiry%20About%20Phonics%20Classes"
+                    className="w-full sm:w-auto bg-white text-[#123B91] rounded-[20px] border-[4px] border-[#123B91] px-6 py-3 font-black text-[16px] flex items-center justify-center gap-3 shadow-[5px_5px_0_#123B91] hover:translate-x-[-3px] hover:translate-y-[-3px] hover:shadow-[8px_8px_0_#123B91] transition-all duration-200 cursor-pointer active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_#123B91] no-underline"
+                  >
+                    <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" fill="#EAEAEA"/>
+                      <path d="M22 6v12c0 1.1-.9 2-2 2h-3V8l-5 4-5-4v12H4c-1.1 0-2-.9-2-2V6l10 7 10-7z" fill="#4285F4"/>
+                      <path d="M2 6v2l10 7 10-7V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2z" fill="#EA4335"/>
+                    </svg>
+                    <div className="text-left leading-tight">
+                      <span className="block text-[15px] font-black text-[#123B91]">Email Us</span>
+                      <span className="block text-[11px] text-gray-500 font-medium">Send us an Email</span>
+                    </div>
+                  </a>
+                  
+                </div>
 
             </div>
             <div />
@@ -472,7 +628,7 @@ export default function HomePage() {
 
     {
       icon: '🎖️',
-      text: 'Certified',
+      text: 'Experienced',
       label: 'Educators'
     },
 
@@ -1484,6 +1640,45 @@ export default function HomePage() {
 </section>
 
 
+      {/* ═══════════════════════════════════════════
+          VIDEO TESTIMONIALS SECTION
+      ═══════════════════════════════════════════ */}
+      <section className="relative pt-[60px] sm:pt-[80px] pb-[60px] bg-[#F8F5ED] overflow-hidden select-none w-full">
+        <FloatingBg items={[
+          { el: '🎬', left: '3%',  top: '15%', size: '2rem',  anim: 'floatY',     dur: 4,   delay: 0   },
+          { el: '⭐', left: '91%', top: '10%', size: '2rem',  anim: 'floatYR',    dur: 3.5, delay: .5  },
+          { el: '🎥', left: '94%', top: '55%', size: '1.8rem',anim: 'wiggle',     dur: 2.5, delay: 1   },
+          { el: '✦',  left: '20%', top: '8%',  size: '1.4rem',anim: 'starTwinkle',dur: 1.6, delay: 1.1 },
+          { el: '💫', left: '70%', top: '85%', size: '1.5rem',anim: 'pulse',      dur: 2,   delay: .7  },
+          { el: '🌟', left: '50%', top: '5%',  size: '1.6rem',anim: 'starTwinkle',dur: 2,   delay: .3  },
+        ]} />
+
+        {/* HEADING */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-14 px-4 relative z-10" style={{ animation: 'slideInUp .7s ease both' }}>
+          <svg className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] shrink-0 drop-shadow-[1.5px_2px_0_#123B91]"
+            style={{ animation: 'spin 6s linear infinite' }} viewBox="0 0 24 24" fill="#FFD633" stroke="#123B91" strokeWidth="2.2" strokeLinejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          <h2 className="text-[#123B91] font-black text-[26px] sm:text-[34px] md:text-[44px] text-center leading-[1.1] tracking-tight">
+            Video Testimonials
+          </h2>
+          <svg className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] shrink-0 drop-shadow-[1.5px_2px_0_#123B91]"
+            style={{ animation: 'spinR 6s linear infinite' }} viewBox="0 0 24 24" fill="#FFD633" stroke="#123B91" strokeWidth="2.2" strokeLinejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+
+        {/* VIDEO CARDS — sirf video, koi text nahi */}
+        <div className="max-w-[1140px] mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <VideoCard src="/videos/video-1.mp4" idx={0} />
+            <VideoCard src="/videos/video-2.mp4" idx={1} />
+            <VideoCard src="/videos/video-3.mp4" idx={2} />
+          </div>
+        </div>
+      </section>
+
+
 
       {/* ═══════════════════════════════════════════
           TESTIMONIALS SECTION
@@ -1542,17 +1737,22 @@ export default function HomePage() {
               { avatar: '/images/girl-1.png', name: 'Priya S.',  color: '#F472B6', text: 'My child has improved so much in reading in just a few weeks. The classes are fun and teachers are amazing!' },
               { avatar: '/images/parent2.png', name: 'Rahul M.', color: '#4ADE80', text: 'Crest and Core Phonics Classes made learning easy and exciting for my son!' },
               { avatar: '/images/parent3.png', name: 'Amit T.',  color: '#F472B6', text: 'The phonics activities are very engaging. Highly recommend!' },
+              { avatar: '', name: 'Krishav Bhardwaj',  color: '#F472B6', text: 'Children will enjoy the class and learn something good.'},
+              { avatar: '', name: 'Shikha thakur', color: '#4ADE80', text: 'I really happy and fully satisfied about you thank u for being such an imortnt part in our child devlopmnt... 🙏' },
+              { avatar: '', name: 'Mr. Rajneesh kumar',  color: '#F472B6', text: 'The class was very good...we also liked it, the children will also learn something new...thank you 🙏' },
             ].map((item, idx) => (
               <div key={idx}
                 className="relative bg-white rounded-[32px] border-[3px] border-[#E5B84B] shadow-[0_8px_0_0_#E5B84B]
                   hover:shadow-[0_4px_0_0_#E5B84B] hover:translate-y-[4px] transition-all duration-300 px-6 pb-8 pt-14 group"
-                style={{ animation: `cardPop .6s ${.1 + idx * .18}s ease both`, animationFillMode: 'rainbowBorder' }}>
+                style={{ paddingTop: item.avatar ? '56px' : '24px', animation: `cardPop .6s ${.1 + idx * .18}s ease both`, animationFillMode: 'rainbowBorder' }}>
 
                 {/* Floating avatar */}
-                <div className="absolute -top-[42px] left-6 w-[84px] h-[84px] rounded-full bg-[#FAF6EE] border-[3px] border-[#123B91] p-1 shadow-[3px_4px_0px_0px_#123B91] overflow-hidden z-20 group-hover:scale-110 transition-transform duration-300"
-                  style={{ animation: `floatY ${3 + idx * .6}s ${idx * .4}s ease-in-out infinite` }}>
-                  <img src={item.avatar} alt={item.name} className="w-full h-full object-cover rounded-full bg-[#E1F2FF]"/>
-                </div>
+                {item.avatar && (
+                  <div className="absolute -top-[42px] left-6 w-[84px] h-[84px] rounded-full bg-[#FAF6EE] border-[3px] border-[#123B91] p-1 shadow-[3px_4px_0px_0px_#123B91] overflow-hidden z-20 group-hover:scale-110 transition-transform duration-300"
+                    style={{ animation: `floatY ${3 + idx * .6}s ${idx * .4}s ease-in-out infinite` }}>
+                    <img src={item.avatar} alt={item.name} className="w-full h-full object-cover rounded-full bg-[#E1F2FF]"/>
+                  </div>
+                )}
 
                 {/* Stars */}
                 <div className="flex items-center gap-0.5 mb-3">
