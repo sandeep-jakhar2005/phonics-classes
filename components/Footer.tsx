@@ -244,9 +244,9 @@ export default function Footer() {
         </div>
 
         {/* COPYRIGHT */}
-        <div className="border-t border-white/10 mt-10 pt-6 text-center text-sm text-white/50">
-          © 2024 Crest & Core Phonics Classes
-        </div>
+      <div className="border-t border-white/10 mt-10 pt-6 text-center text-sm text-white/50">
+        © {new Date().getFullYear()} Crest & Core Phonics Classes
+      </div>
 
       </div>
 

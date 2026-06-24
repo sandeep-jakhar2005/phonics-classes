@@ -19,6 +19,10 @@ export const metadata = {
     'kids learning',
     'reading skills',
   ],
+
+  icons: {
+    icon: '/images/favicon.jpg',
+  },
 }
 
 export default function RootLayout({
