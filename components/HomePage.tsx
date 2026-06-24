@@ -472,7 +472,7 @@ export default function HomePage() {
 
     {
       icon: '🎖️',
-      text: 'Certified',
+      text: 'Experienced',
       label: 'Educators'
     },
 

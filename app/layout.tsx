@@ -8,8 +8,17 @@ const fredoka = Fredoka({
 })
 
 export const metadata = {
-  title: 'Phonics Classes',
-  description: 'Fun phonics learning for kids',
+  title: 'Crest & Core | Phonics for Kids',
+  description:
+    'Fun and engaging phonics classes that help children build strong reading, spelling, pronunciation, and confidence skills.',
+  keywords: [
+    'phonics classes',
+    'online phonics classes',
+    'phonics for kids',
+    'reading classes for kids',
+    'kids learning',
+    'reading skills',
+  ],
 }
 
 export default function RootLayout({
